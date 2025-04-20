@@ -11016,7 +11016,7 @@ impl<'a> Parser<'a> {
         };
 
         let sort_by = if self.parse_keywords(&[Keyword::SORT, Keyword::BY]) {
-            self.parse_comma_separated(Parser::parse_expr)?
+            self.parse_comma_separated(Parser::parse_sort_by_expr)?
         } else {
             vec![]
         };
@@ -14040,6 +14040,52 @@ impl<'a> Parser<'a> {
         } else {
             None
         }
+    }
+
+    /// Parse an [SortByExpr] expression.
+    pub fn parse_sort_by_expr(&mut self) -> Result<SortByExpr, ParserError> {
+        self.parse_sort_by_expr_inner(false)
+            .map(|(sort_by, _)| sort_by)
+    }
+
+    fn parse_sort_by_expr_inner(
+        &mut self,
+        with_operator_class: bool,
+    ) -> Result<(SortByExpr, Option<Ident>), ParserError> {
+        let expr = self.parse_expr()?;
+
+        let operator_class: Option<Ident> = if with_operator_class {
+            // We check that if non of the following keywords are present, then we parse an
+            // identifier as operator class.
+            if self
+                .peek_one_of_keywords(&[Keyword::ASC, Keyword::DESC, Keyword::NULLS, Keyword::WITH])
+                .is_some()
+            {
+                None
+            } else {
+                self.maybe_parse(|parser| parser.parse_identifier())?
+            }
+        } else {
+            None
+        };
+
+        let options = self.parse_sort_by_options()?;
+
+        Ok((SortByExpr { expr, options }, operator_class))
+    }
+
+    fn parse_sort_by_options(&mut self) -> Result<SortByOptions, ParserError> {
+        let asc = self.parse_asc_desc();
+
+        let nulls_first = if self.parse_keywords(&[Keyword::NULLS, Keyword::FIRST]) {
+            Some(true)
+        } else if self.parse_keywords(&[Keyword::NULLS, Keyword::LAST]) {
+            Some(false)
+        } else {
+            None
+        };
+
+        Ok(SortByOptions { asc, nulls_first })
     }
 
     /// Parse an [OrderByExpr] expression.

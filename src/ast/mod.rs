@@ -75,13 +75,13 @@ pub use self::query::{
     OpenJsonTableColumn, OrderBy, OrderByExpr, OrderByKind, OrderByOptions, PivotValueSource,
     ProjectionSelect, Query, RenameSelectItem, RepetitionQuantifier, ReplaceSelectElement,
     ReplaceSelectItem, RowsPerMatch, Select, SelectFlavor, SelectInto, SelectItem,
-    SelectItemQualifiedWildcardKind, SetExpr, SetOperator, SetQuantifier, Setting,
-    SymbolDefinition, Table, TableAlias, TableAliasColumnDef, TableFactor, TableFunctionArgs,
-    TableIndexHintForClause, TableIndexHintType, TableIndexHints, TableIndexType, TableSample,
-    TableSampleBucket, TableSampleKind, TableSampleMethod, TableSampleModifier,
-    TableSampleQuantity, TableSampleSeed, TableSampleSeedModifier, TableSampleUnit, TableVersion,
-    TableWithJoins, Top, TopQuantity, UpdateTableFromKind, ValueTableMode, Values,
-    WildcardAdditionalOptions, With, WithFill,
+    SelectItemQualifiedWildcardKind, SetExpr, SetOperator, SetQuantifier, Setting, SortByExpr,
+    SortByOptions, SymbolDefinition, Table, TableAlias, TableAliasColumnDef, TableFactor,
+    TableFunctionArgs, TableIndexHintForClause, TableIndexHintType, TableIndexHints,
+    TableIndexType, TableSample, TableSampleBucket, TableSampleKind, TableSampleMethod,
+    TableSampleModifier, TableSampleQuantity, TableSampleSeed, TableSampleSeedModifier,
+    TableSampleUnit, TableVersion, TableWithJoins, Top, TopQuantity, UpdateTableFromKind,
+    ValueTableMode, Values, WildcardAdditionalOptions, With, WithFill,
 };
 
 pub use self::trigger::{

@@ -34,9 +34,9 @@ use super::{
     Offset, OnConflict, OnConflictAction, OnInsert, OrderBy, OrderByExpr, OrderByKind, Partition,
     PivotValueSource, ProjectionSelect, Query, RaiseStatement, RaiseStatementValue,
     ReferentialAction, RenameSelectItem, ReplaceSelectElement, ReplaceSelectItem, Select,
-    SelectInto, SelectItem, SetExpr, SqlOption, Statement, Subscript, SymbolDefinition, TableAlias,
-    TableAliasColumnDef, TableConstraint, TableFactor, TableObject, TableOptionsClustered,
-    TableWithJoins, UpdateTableFromKind, Use, Value, Values, ViewColumnDef,
+    SelectInto, SelectItem, SetExpr, SortByExpr, SqlOption, Statement, Subscript, SymbolDefinition,
+    TableAlias, TableAliasColumnDef, TableConstraint, TableFactor, TableObject,
+    TableOptionsClustered, TableWithJoins, UpdateTableFromKind, Use, Value, Values, ViewColumnDef,
     WildcardAdditionalOptions, With, WithFill,
 };
 
@@ -2023,6 +2023,13 @@ impl Spanned for WithFill {
                 .chain(to.iter().map(|t| t.span()))
                 .chain(step.iter().map(|s| s.span())),
         )
+    }
+}
+
+impl Spanned for SortByExpr {
+    fn span(&self) -> Span {
+        let SortByExpr { expr, options: _ } = self;
+        expr.span()
     }
 }
 

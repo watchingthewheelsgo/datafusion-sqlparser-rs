@@ -316,7 +316,7 @@ pub struct Select {
     /// DISTRIBUTE BY (Hive)
     pub distribute_by: Vec<Expr>,
     /// SORT BY (Hive)
-    pub sort_by: Vec<Expr>,
+    pub sort_by: Vec<SortByExpr>,
     /// HAVING
     pub having: Option<Expr>,
     /// WINDOW AS
@@ -2355,6 +2355,48 @@ pub struct OrderByOptions {
 }
 
 impl fmt::Display for OrderByOptions {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self.asc {
+            Some(true) => write!(f, " ASC")?,
+            Some(false) => write!(f, " DESC")?,
+            None => (),
+        }
+        match self.nulls_first {
+            Some(true) => write!(f, " NULLS FIRST")?,
+            Some(false) => write!(f, " NULLS LAST")?,
+            None => (),
+        }
+        Ok(())
+    }
+}
+
+/// An `SORT BY` expression
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "visitor", derive(Visit, VisitMut))]
+pub struct SortByExpr {
+    pub expr: Expr,
+    pub options: SortByOptions,
+}
+
+impl fmt::Display for SortByExpr {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}{}", self.expr, self.options)?;
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "visitor", derive(Visit, VisitMut))]
+pub struct SortByOptions {
+    /// Optional `ASC` or `DESC`
+    pub asc: Option<bool>,
+    /// Optional `NULLS FIRST` or `NULLS LAST`
+    pub nulls_first: Option<bool>,
+}
+
+impl fmt::Display for SortByOptions {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self.asc {
             Some(true) => write!(f, " ASC")?,
